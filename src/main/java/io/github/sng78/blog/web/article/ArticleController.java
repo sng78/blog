@@ -76,4 +76,11 @@ public class ArticleController {
         repository.save(article);
         return "redirect:/blog";
     }
+
+    @PostMapping("/blog/{id}/delete")
+    public String blogArticleDelete(@PathVariable(value = "id") long id) {
+        Article article = repository.findById(id).orElseThrow();
+        repository.delete(article);
+        return "redirect:/blog";
+    }
 }
