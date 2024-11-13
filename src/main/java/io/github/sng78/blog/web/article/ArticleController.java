@@ -53,4 +53,27 @@ public class ArticleController {
         model.addAttribute("article", result);
         return "blog-details";
     }
+
+    @GetMapping("/blog/{id}/edit")
+    public String articleEdit(@PathVariable(value = "id") long id, Model model) {
+        if (!repository.existsById(id)) {
+            return "redirect:/blog";
+        }
+        model.addAttribute("title", "Редактирование статьи");
+        Optional<Article> article = repository.findById(id);
+        ArrayList<Article> result = new ArrayList<>();
+        article.ifPresent(result::add);
+        model.addAttribute("article", result);
+        return "blog-edit";
+    }
+
+    @PostMapping("/blog/{id}/edit")
+    public String blogArticleUpdate(@PathVariable(value = "id") long id, @RequestParam String title, @RequestParam String preview, @RequestParam String content) {
+        Article article = repository.findById(id).orElseThrow();
+        article.setTitle(title);
+        article.setPreview(preview);
+        article.setContent(content);
+        repository.save(article);
+        return "redirect:/blog";
+    }
 }
